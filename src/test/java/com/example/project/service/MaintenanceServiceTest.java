@@ -60,12 +60,20 @@ class MaintenanceServiceTest {
         company = new Company("Green Office", "REG-555", "owner@example.com", owner);
         company.setId(10L);
 
-        plan = new MaintenancePlan("Standard Plan", "Weekly care", BigDecimal.valueOf(1500),
-                MaintenancePlan.MaintenanceFrequency.WEEKLY, "Watering, pruning");
+        plan = new MaintenancePlan();
+        plan.setName("Standard Plan");
+        plan.setDescription("Weekly care");
+        plan.setMonthlyPrice(BigDecimal.valueOf(1500));
+        plan.setFrequency(MaintenancePlan.Frequency.WEEKLY);
+        plan.setIncludedServices("Watering, pruning");
         plan.setId(20L);
 
-        subscription = new Subscription(null, company, null, owner, plan, LocalDate.now());
+        subscription = new Subscription();
         subscription.setId(30L);
+        subscription.setCompany(company);
+        subscription.setCustomer(owner);
+        subscription.setPlan(plan);
+        subscription.setStartDate(LocalDate.now());
         subscription.setStatus(Subscription.SubscriptionStatus.ACTIVE);
     }
 
@@ -108,8 +116,10 @@ class MaintenanceServiceTest {
         Worker worker = new Worker(workerUser, "EMP-001", "Pruning Specialist");
         worker.setId(5L);
 
-        ServiceVisit visit = new ServiceVisit(subscription, LocalDate.now());
+        ServiceVisit visit = new ServiceVisit();
         visit.setId(100L);
+        visit.setSubscription(subscription);
+        visit.setScheduledDate(LocalDate.now());
         visit.setAssignedWorker(worker);
 
         when(userRepository.findByEmail("worker@example.com")).thenReturn(Optional.of(workerUser));

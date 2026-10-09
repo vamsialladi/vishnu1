@@ -59,6 +59,7 @@ public class PaymentDto {
 
         public String getPaymentStatus() { return paymentStatus; }
         public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+        public String getStatus() { return paymentStatus; }
 
         public String getGatewayReference() { return gatewayReference; }
         public void setGatewayReference(String gatewayReference) { this.gatewayReference = gatewayReference; }

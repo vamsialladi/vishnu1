@@ -59,28 +59,32 @@ class AdminReportServiceTest {
     @Test
     @DisplayName("Should aggregate real dashboard statistics from database repositories")
     void shouldAggregateDashboardStatistics() {
-        when(userRepository.countByRole(Role.ROLE_CUSTOMER)).thenReturn(15L);
+        when(userRepository.count()).thenReturn(15L);
         when(workerRepository.count()).thenReturn(5L);
         when(productRepository.count()).thenReturn(30L);
-        when(plantInstanceRepository.count()).thenReturn(50L);
         when(bookingRepository.count()).thenReturn(20L);
-        when(subscriptionRepository.countByStatus(Subscription.SubscriptionStatus.ACTIVE)).thenReturn(12L);
-        when(emergencyRepository.countByStatus(EmergencyRequest.EmergencyStatus.OPEN)).thenReturn(2L);
-        when(complaintRepository.countByStatus(Complaint.ComplaintStatus.OPEN)).thenReturn(1L);
+        when(subscriptionRepository.findByStatus(Subscription.SubscriptionStatus.ACTIVE)).thenReturn(List.of(new Subscription()));
+        when(siteInspectionRepository.findByStatus(SiteInspection.InspectionStatus.REQUESTED)).thenReturn(List.of());
+        when(installationRepository.findByStatus(Installation.InstallationStatus.SCHEDULED)).thenReturn(List.of());
+        when(emergencyRepository.findByStatus(EmergencyRequest.Status.OPEN)).thenReturn(List.of(new EmergencyRequest(), new EmergencyRequest()));
+        when(complaintRepository.findByStatus(Complaint.Status.OPEN)).thenReturn(List.of(new Complaint()));
 
-        Payment p1 = new Payment(null, BigDecimal.valueOf(1500), Payment.PaymentStatus.SUCCESS, "TXN-1", "GATEWAY");
-        Payment p2 = new Payment(null, BigDecimal.valueOf(3500), Payment.PaymentStatus.SUCCESS, "TXN-2", "GATEWAY");
-        when(paymentRepository.findByStatus(Payment.PaymentStatus.SUCCESS)).thenReturn(List.of(p1, p2));
+        Payment p1 = new Payment();
+        p1.setAmount(BigDecimal.valueOf(1500));
+        Payment p2 = new Payment();
+        p2.setAmount(BigDecimal.valueOf(3500));
+        when(paymentRepository.findByStatus("SUCCESS")).thenReturn(List.of(p1, p2));
+        when(bookingRepository.findAll()).thenReturn(List.of());
+        when(plantInstanceRepository.findAll()).thenReturn(List.of());
 
         AdminReportDto.DashboardStats stats = adminReportService.getDashboardStatistics();
 
         assertThat(stats).isNotNull();
         assertThat(stats.getTotalCustomers()).isEqualTo(15L);
         assertThat(stats.getTotalWorkers()).isEqualTo(5L);
-        assertThat(stats.getTotalPlantsInCatalog()).isEqualTo(30L);
-        assertThat(stats.getTotalInstalledPlants()).isEqualTo(50L);
+        assertThat(stats.getTotalPlants()).isEqualTo(30L);
         assertThat(stats.getTotalBookings()).isEqualTo(20L);
-        assertThat(stats.getActiveSubscriptions()).isEqualTo(12L);
+        assertThat(stats.getActiveSubscriptions()).isEqualTo(1L);
         assertThat(stats.getOpenEmergencies()).isEqualTo(2L);
         assertThat(stats.getOpenComplaints()).isEqualTo(1L);
         assertThat(stats.getTotalRevenue()).isEqualByComparingTo(BigDecimal.valueOf(5000));

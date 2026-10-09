@@ -34,6 +34,15 @@ public class Notification {
 
     public Notification() {}
 
+    public Notification(User user, String title, String message, String eventType, Long referenceId) {
+        this.user = user;
+        this.title = title;
+        this.message = message;
+        this.eventType = eventType;
+        this.referenceId = referenceId;
+        this.createdAt = LocalDateTime.now();
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

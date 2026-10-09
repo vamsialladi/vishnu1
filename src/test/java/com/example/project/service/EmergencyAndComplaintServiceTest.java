@@ -66,8 +66,11 @@ class EmergencyAndComplaintServiceTest {
         company = new Company("Client Corp", "REG-99", "client@example.com", customer);
         company.setId(10L);
 
-        emergencyRequest = new EmergencyRequest(company, null, "Severe plant wilting",
-                EmergencyRequest.EmergencyPriority.HIGH, LocalDate.now());
+        emergencyRequest = new EmergencyRequest();
+        emergencyRequest.setCompany(company);
+        emergencyRequest.setProblemDescription("Severe plant wilting");
+        emergencyRequest.setPriority(EmergencyRequest.Priority.HIGH);
+        emergencyRequest.setPreferredVisitDate(java.time.LocalDateTime.now());
         emergencyRequest.setId(100L);
     }
 
@@ -80,9 +83,9 @@ class EmergencyAndComplaintServiceTest {
 
         EmergencyDto.CreateRequest request = new EmergencyDto.CreateRequest();
         request.setCompanyId(10L);
-        request.setDescription("Severe plant wilting");
+        request.setProblemDescription("Severe plant wilting");
         request.setPriority("HIGH");
-        request.setPreferredVisitDate(LocalDate.now());
+        request.setPreferredVisitDate(java.time.LocalDateTime.now());
 
         EmergencyDto.Response response = emergencyService.createEmergencyRequest(request, "client@example.com");
 
@@ -96,13 +99,17 @@ class EmergencyAndComplaintServiceTest {
     @DisplayName("Should resolve complaint successfully")
     void shouldResolveComplaint() {
         ComplaintServiceImpl complaintService = new ComplaintServiceImpl(
-                complaintRepository, companyRepository, userRepository,
-                bookingRepository, visitRepository, workerRepository, notificationService);
+                complaintRepository, companyRepository,
+                bookingRepository, visitRepository, userRepository);
 
         User admin = new User("admin", "admin@example.com", "pass", "Admin", Role.ROLE_ADMIN);
         admin.setId(99L);
 
-        Complaint complaint = new Complaint(company, "SERVICE_QUALITY", "Technician was late", Complaint.ComplaintPriority.MEDIUM);
+        Complaint complaint = new Complaint();
+        complaint.setCompany(company);
+        complaint.setCategory("SERVICE_QUALITY");
+        complaint.setDescription("Technician was late");
+        complaint.setPriority(Complaint.Priority.MEDIUM);
         complaint.setId(200L);
 
         when(userRepository.findByEmail("admin@example.com")).thenReturn(Optional.of(admin));
@@ -115,7 +122,7 @@ class EmergencyAndComplaintServiceTest {
         ComplaintDto.Response resp = complaintService.resolveComplaint(200L, req, "admin@example.com");
 
         assertThat(resp).isNotNull();
-        assertThat(complaint.getStatus()).isEqualTo(Complaint.ComplaintStatus.RESOLVED);
+        assertThat(complaint.getStatus()).isEqualTo(Complaint.Status.RESOLVED);
         assertThat(complaint.getResolutionNotes()).contains("Apology issued");
     }
 }

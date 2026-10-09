@@ -51,6 +51,16 @@ public class RecommendationDto {
             this.reasons = reasons;
         }
 
+        public PlantRecommendationItem(Long id, String name, String description, BigDecimal price, double matchScore, List<String> reasons) {
+            this.plant = new ProductResponse(id, name, description, price, 10, "Indoor", "SKU-" + id);
+            this.matchScore = matchScore;
+            this.reasons = reasons;
+        }
+
+        public String getName() {
+            return plant != null ? plant.getName() : null;
+        }
+
         public ProductResponse getPlant() { return plant; }
         public void setPlant(ProductResponse plant) { this.plant = plant; }
 
@@ -73,6 +83,7 @@ public class RecommendationDto {
 
         public ScoreResponse() {}
 
+        public int getTotalScore() { return overallScore; }
         public int getOverallScore() { return overallScore; }
         public void setOverallScore(int overallScore) { this.overallScore = overallScore; }
 

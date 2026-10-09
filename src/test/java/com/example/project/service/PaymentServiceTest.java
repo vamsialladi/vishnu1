@@ -48,9 +48,11 @@ class PaymentServiceTest {
         customer = new User("cust", "cust@example.com", "pass", "Customer One", Role.ROLE_CUSTOMER);
         customer.setId(1L);
 
-        booking = new Booking("BK-12345", customer, null, null, null);
+        booking = new Booking();
         booking.setId(10L);
-        booking.setTotalAmount(BigDecimal.valueOf(2500));
+        booking.setBookingNumber("BK-12345");
+        booking.setUser(customer);
+        booking.setGrandTotal(BigDecimal.valueOf(2500));
         booking.setStatus(Booking.BookingStatus.PENDING_PAYMENT);
     }
 
@@ -60,17 +62,21 @@ class PaymentServiceTest {
         when(userRepository.findByEmail("cust@example.com")).thenReturn(Optional.of(customer));
         when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
 
-        PaymentGateway.GatewayResult gatewayResult = new PaymentGateway.GatewayResult(
-                true, "TXN-9999", "MOCK_SUCCESS", "Payment processed successfully");
-        when(paymentGateway.processPayment(any(), any(), any())).thenReturn(gatewayResult);
+        PaymentGateway.PaymentGatewayResult gatewayResult = new PaymentGateway.PaymentGatewayResult(
+                true, "TXN-9999", null);
+        when(paymentGateway.processPayment(any(), any(), any(), any())).thenReturn(gatewayResult);
 
-        Payment payment = new Payment(booking, BigDecimal.valueOf(2500), Payment.PaymentStatus.SUCCESS, "TXN-9999", "MOCK");
+        Payment payment = new Payment();
         payment.setId(100L);
+        payment.setBooking(booking);
+        payment.setAmount(BigDecimal.valueOf(2500));
+        payment.setStatus("SUCCESS");
+        payment.setTransactionId("TXN-9999");
+        payment.setPaymentMethod("CARD");
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
         PaymentDto.ProcessRequest request = new PaymentDto.ProcessRequest();
         request.setBookingId(10L);
-        request.setAmount(BigDecimal.valueOf(2500));
         request.setPaymentMethod("CARD");
 
         PaymentDto.Response response = paymentService.initiateAndProcessPayment(request, "cust@example.com");

@@ -59,6 +59,12 @@ public class CartItem {
         this.installationCharge = product.getInstallationCharge() != null ? product.getInstallationCharge() : BigDecimal.ZERO;
     }
 
+    public CartItem(Cart cart, Product product, Integer quantity, boolean isRental, boolean includeInstallation, MaintenancePlan maintenancePlan) {
+        this(cart, product, quantity, isRental);
+        this.includeInstallation = includeInstallation;
+        this.maintenancePlan = maintenancePlan;
+    }
+
     public CartItem(Cart cart, Product product, Integer quantity, String itemType, BigDecimal unitPrice, BigDecimal installationCharge, BigDecimal maintenanceCharge) {
         this.cart = cart;
         this.product = product;
