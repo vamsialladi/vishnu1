@@ -1,0 +1,9 @@
+# Docker ignore file
+target/
+.git
+.gitignore
+.vscode
+*.md
+.gemini
+.idea
+*.log
