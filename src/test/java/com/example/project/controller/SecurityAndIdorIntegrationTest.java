@@ -65,7 +65,7 @@ class SecurityAndIdorIntegrationTest {
     @Test
     @DisplayName("IDOR Prevention: Customer 2 cannot access Customer 1 company data (403 Forbidden)")
     void shouldPreventCustomerAccessingOtherCompany() throws Exception {
-        mockMvc.perform(get("/api/v1/companies/" + company1.getId())
+        mockMvc.perform(get("/api/companies/" + company1.getId())
                         .param("username", "cust2@example.com"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("Access denied")));
@@ -74,7 +74,7 @@ class SecurityAndIdorIntegrationTest {
     @Test
     @DisplayName("Ownership Validation: Customer 1 can access own company data (200 OK)")
     void shouldAllowCustomerAccessingOwnCompany() throws Exception {
-        mockMvc.perform(get("/api/v1/companies/" + company1.getId())
+        mockMvc.perform(get("/api/companies/" + company1.getId())
                         .param("username", "cust1@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(company1.getId()));
@@ -110,7 +110,7 @@ class SecurityAndIdorIntegrationTest {
     @Test
     @DisplayName("API Error Handling: Requesting non-existent company returns 404 Not Found")
     void shouldReturn404ForNonExistentResource() throws Exception {
-        mockMvc.perform(get("/api/v1/companies/999999")
+        mockMvc.perform(get("/api/companies/999999")
                         .param("username", "admin1@example.com"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404));
@@ -131,7 +131,7 @@ class SecurityAndIdorIntegrationTest {
     @Test
     @DisplayName("Correlation ID: Responses should contain X-Correlation-ID header")
     void shouldContainCorrelationIdHeader() throws Exception {
-        mockMvc.perform(get("/api/v1/plants")
+        mockMvc.perform(get("/api/v1/products")
                         .header("X-Correlation-ID", "test-corr-12345"))
                 .andExpect(status().isOk())
                 .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("X-Correlation-ID", "test-corr-12345"));

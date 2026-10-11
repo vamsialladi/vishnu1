@@ -74,14 +74,11 @@ class CartServiceTest {
         when(userRepository.findByEmail("alice@example.com")).thenReturn(Optional.of(user));
         when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
         when(productRepository.findById(2L)).thenReturn(Optional.of(product));
-        when(cartItemRepository.findByCartId(5L)).thenReturn(new ArrayList<>());
+        when(cartRepository.save(any(Cart.class))).thenReturn(cart);
 
         CartItem savedItem = new CartItem(cart, product, 2, false, true, null);
         savedItem.setId(100L);
         when(cartItemRepository.save(any(CartItem.class))).thenReturn(savedItem);
-
-        List<CartItem> items = List.of(savedItem);
-        when(cartItemRepository.findByCartId(5L)).thenReturn(new ArrayList<>()).thenReturn(items);
 
         CartDto.AddItemRequest request = new CartDto.AddItemRequest();
         request.setProductId(2L);

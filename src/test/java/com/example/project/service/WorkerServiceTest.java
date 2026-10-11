@@ -59,8 +59,6 @@ class WorkerServiceTest {
     @DisplayName("Should register new worker")
     void shouldRegisterWorker() {
         when(userRepository.findById(2L)).thenReturn(Optional.of(workerUser));
-        when(workerRepository.existsByEmployeeCode("EMP-101")).thenReturn(false);
-        when(workerRepository.findByUserId(2L)).thenReturn(Optional.empty());
         when(workerRepository.save(any(Worker.class))).thenReturn(worker);
 
         WorkerDto.CreateRequest request = new WorkerDto.CreateRequest();

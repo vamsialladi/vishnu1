@@ -25,6 +25,17 @@ public class ProductResponse {
 
     public ProductResponse() {}
 
+    public ProductResponse(Long id, String name, String description, BigDecimal price, Integer quantity, String category, String sku) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.sku = sku;
+        this.active = true;
+    }
+
     public ProductResponse(Long id, String name, String scientificName, String description, BigDecimal price, BigDecimal rentalPrice, BigDecimal installationCharge, Integer quantity, String category, String sku, String sunlightRequirement, String waterRequirement, String maintenanceLevel, boolean indoor, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;

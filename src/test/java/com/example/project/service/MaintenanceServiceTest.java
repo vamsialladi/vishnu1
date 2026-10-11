@@ -123,8 +123,8 @@ class MaintenanceServiceTest {
         visit.setAssignedWorker(worker);
 
         when(userRepository.findByEmail("worker@example.com")).thenReturn(Optional.of(workerUser));
-        when(workerRepository.findByUserId(2L)).thenReturn(Optional.of(worker));
         when(visitRepository.findById(100L)).thenReturn(Optional.of(visit));
+        when(visitRepository.save(any(ServiceVisit.class))).thenReturn(visit);
 
         MaintenanceDto.ServiceVisitResponse response = maintenanceService.recordArrival(100L, "worker@example.com");
 

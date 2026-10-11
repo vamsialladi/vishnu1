@@ -19,3 +19,9 @@ management:
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [corrId=%X{correlationId}] - %msg%n"
+
+# Razorpay Payment Gateway Configuration
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_TmQBILcdURyzvk}
+  key-secret: ${RAZORPAY_KEY_SECRET:OlhygDhyB511YDUwtc29JyH0}
+  currency: INR
