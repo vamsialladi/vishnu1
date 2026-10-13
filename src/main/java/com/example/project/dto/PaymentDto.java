@@ -1,5 +1,6 @@
 package com.example.project.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -127,5 +128,108 @@ public class PaymentDto {
 
         public String getPaymentStatus() { return paymentStatus; }
         public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    }
+
+    public static class RazorpayCreateOrderRequest {
+        @NotNull(message = "Booking ID is required")
+        private Long bookingId;
+        private String currency;
+
+        public RazorpayCreateOrderRequest() {}
+        public RazorpayCreateOrderRequest(Long bookingId) {
+            this.bookingId = bookingId;
+        }
+
+        public Long getBookingId() { return bookingId; }
+        public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
+
+        public String getCurrency() { return currency; }
+        public void setCurrency(String currency) { this.currency = currency; }
+    }
+
+    public static class RazorpayOrderResponse {
+        private String orderId;
+        private Long bookingId;
+        private String bookingNumber;
+        private BigDecimal amount;
+        private Long amountInPaise;
+        private String currency;
+        private String keyId;
+        private String receipt;
+        private String companyName;
+        private String customerName;
+        private String customerEmail;
+        private String customerPhone;
+
+        public RazorpayOrderResponse() {}
+
+        public String getOrderId() { return orderId; }
+        public void setOrderId(String orderId) { this.orderId = orderId; }
+
+        public Long getBookingId() { return bookingId; }
+        public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
+
+        public String getBookingNumber() { return bookingNumber; }
+        public void setBookingNumber(String bookingNumber) { this.bookingNumber = bookingNumber; }
+
+        public BigDecimal getAmount() { return amount; }
+        public void setAmount(BigDecimal amount) { this.amount = amount; }
+
+        public Long getAmountInPaise() { return amountInPaise; }
+        public void setAmountInPaise(Long amountInPaise) { this.amountInPaise = amountInPaise; }
+
+        public String getCurrency() { return currency; }
+        public void setCurrency(String currency) { this.currency = currency; }
+
+        public String getKeyId() { return keyId; }
+        public void setKeyId(String keyId) { this.keyId = keyId; }
+
+        public String getReceipt() { return receipt; }
+        public void setReceipt(String receipt) { this.receipt = receipt; }
+
+        public String getCompanyName() { return companyName; }
+        public void setCompanyName(String companyName) { this.companyName = companyName; }
+
+        public String getCustomerName() { return customerName; }
+        public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+        public String getCustomerEmail() { return customerEmail; }
+        public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+
+        public String getCustomerPhone() { return customerPhone; }
+        public void setCustomerPhone(String customerPhone) { this.customerPhone = customerPhone; }
+    }
+
+    public static class RazorpayVerifyRequest {
+        @NotNull(message = "Booking ID is required")
+        private Long bookingId;
+
+        @NotBlank(message = "Razorpay order ID is required")
+        private String razorpayOrderId;
+
+        @NotBlank(message = "Razorpay payment ID is required")
+        private String razorpayPaymentId;
+
+        @NotBlank(message = "Razorpay signature is required")
+        private String razorpaySignature;
+
+        private String paymentMethod;
+
+        public RazorpayVerifyRequest() {}
+
+        public Long getBookingId() { return bookingId; }
+        public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
+
+        public String getRazorpayOrderId() { return razorpayOrderId; }
+        public void setRazorpayOrderId(String razorpayOrderId) { this.razorpayOrderId = razorpayOrderId; }
+
+        public String getRazorpayPaymentId() { return razorpayPaymentId; }
+        public void setRazorpayPaymentId(String razorpayPaymentId) { this.razorpayPaymentId = razorpayPaymentId; }
+
+        public String getRazorpaySignature() { return razorpaySignature; }
+        public void setRazorpaySignature(String razorpaySignature) { this.razorpaySignature = razorpaySignature; }
+
+        public String getPaymentMethod() { return paymentMethod; }
+        public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     }
 }

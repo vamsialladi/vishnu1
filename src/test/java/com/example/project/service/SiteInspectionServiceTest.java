@@ -35,12 +35,16 @@ class SiteInspectionServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private WorkerRepository workerRepository;
+
+    @Mock
     private NotificationService notificationService;
 
     @InjectMocks
     private SiteInspectionServiceImpl siteInspectionService;
 
     private User inspector;
+    private Worker inspectorWorker;
     private Booking booking;
     private SiteInspection inspection;
 
@@ -48,6 +52,9 @@ class SiteInspectionServiceTest {
     void setUp() {
         inspector = new User("inspector1", "inspector@example.com", "pass", "Inspector Dan", Role.ROLE_WORKER);
         inspector.setId(3L);
+
+        inspectorWorker = new Worker(inspector, "EMP-INSP", "Site Inspector");
+        inspectorWorker.setId(10L);
 
         User customer = new User("cust", "cust@example.com", "pass", "Customer", Role.ROLE_CUSTOMER);
         customer.setId(1L);
@@ -58,7 +65,7 @@ class SiteInspectionServiceTest {
 
         inspection = new SiteInspection(booking, null, LocalDate.now().plusDays(2));
         inspection.setId(100L);
-        inspection.setInspector(inspector);
+        inspection.setAssignedWorker(inspectorWorker);
         inspection.setStatus(SiteInspection.InspectionStatus.SCHEDULED);
     }
 
@@ -66,12 +73,13 @@ class SiteInspectionServiceTest {
     @DisplayName("Should schedule site inspection successfully")
     void shouldScheduleInspection() {
         when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
-        when(userRepository.findById(3L)).thenReturn(Optional.of(inspector));
+        when(workerRepository.findById(10L)).thenReturn(Optional.of(inspectorWorker));
+        when(inspectionRepository.findByBookingId(10L)).thenReturn(Optional.empty());
         when(inspectionRepository.save(any(SiteInspection.class))).thenReturn(inspection);
 
         SiteInspectionDto.ScheduleRequest request = new SiteInspectionDto.ScheduleRequest();
         request.setBookingId(10L);
-        request.setAssignedWorkerId(3L);
+        request.setAssignedWorkerId(10L);
         request.setScheduledDate(java.time.LocalDateTime.now().plusDays(2));
 
         SiteInspectionDto.Response response = siteInspectionService.scheduleInspection(request);

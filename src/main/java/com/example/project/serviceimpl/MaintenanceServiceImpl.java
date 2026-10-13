@@ -41,7 +41,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     private User getUser(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmail(email).or(() -> userRepository.findByUsername(email))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
     }
 
@@ -308,7 +308,11 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         MaintenanceDto.ServiceVisitResponse resp = new MaintenanceDto.ServiceVisitResponse();
         resp.setId(visit.getId());
         if (visit.getSubscription() != null) resp.setSubscriptionId(visit.getSubscription().getId());
-        resp.setCompanyId(visit.getCompany().getId());
+        if (visit.getCompany() != null) {
+            resp.setCompanyId(visit.getCompany().getId());
+        } else if (visit.getSubscription() != null && visit.getSubscription().getCompany() != null) {
+            resp.setCompanyId(visit.getSubscription().getCompany().getId());
+        }
         if (visit.getAssignedWorker() != null) {
             resp.setAssignedWorkerId(visit.getAssignedWorker().getId());
             resp.setAssignedWorkerName(visit.getAssignedWorker().getUser().getFullName());

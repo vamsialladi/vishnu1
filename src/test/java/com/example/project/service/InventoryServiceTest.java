@@ -81,7 +81,7 @@ class InventoryServiceTest {
 
         assertThatThrownBy(() -> inventoryService.updateStock(req))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("negative");
+                .hasMessageContaining("below zero");
     }
 
     @Test

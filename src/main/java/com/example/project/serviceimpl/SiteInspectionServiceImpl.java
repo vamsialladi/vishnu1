@@ -86,7 +86,7 @@ public class SiteInspectionServiceImpl implements SiteInspectionService {
 
     @Override
     public SiteInspectionDto.Response recordAssessment(Long inspectionId, SiteInspectionDto.AssessmentRequest request, String workerEmail) {
-        User user = userRepository.findByEmail(workerEmail)
+        User user = userRepository.findByEmail(workerEmail).or(() -> userRepository.findByUsername(workerEmail))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + workerEmail));
 
         SiteInspection inspection = siteInspectionRepository.findById(inspectionId)

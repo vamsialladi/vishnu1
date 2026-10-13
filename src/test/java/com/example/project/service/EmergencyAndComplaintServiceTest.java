@@ -117,6 +117,7 @@ class EmergencyAndComplaintServiceTest {
         when(complaintRepository.save(any(Complaint.class))).thenReturn(complaint);
 
         ComplaintDto.ResolveRequest req = new ComplaintDto.ResolveRequest();
+        req.setStatus("RESOLVED");
         req.setResolutionNotes("Apology issued and complementary maintenance visit provided.");
 
         ComplaintDto.Response resp = complaintService.resolveComplaint(200L, req, "admin@example.com");

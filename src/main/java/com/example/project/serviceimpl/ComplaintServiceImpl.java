@@ -36,7 +36,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     private User getUser(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmail(email).or(() -> userRepository.findByUsername(email))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
     }
 
