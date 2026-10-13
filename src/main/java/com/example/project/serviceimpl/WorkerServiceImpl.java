@@ -72,7 +72,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional(readOnly = true)
     public WorkerDto.Response getWorkerByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email).or(() -> userRepository.findByUsername(email))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
         return getWorkerByUserId(user.getId());
     }

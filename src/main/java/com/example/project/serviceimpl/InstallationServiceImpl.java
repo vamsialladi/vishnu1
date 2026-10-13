@@ -99,7 +99,7 @@ public class InstallationServiceImpl implements InstallationService {
 
     @Override
     public InstallationDto.Response startInstallation(Long installationId, String workerEmail) {
-        User user = userRepository.findByEmail(workerEmail)
+        User user = userRepository.findByEmail(workerEmail).or(() -> userRepository.findByUsername(workerEmail))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + workerEmail));
 
         Installation installation = installationRepository.findById(installationId)
@@ -125,7 +125,7 @@ public class InstallationServiceImpl implements InstallationService {
 
     @Override
     public InstallationDto.Response completeInstallation(Long installationId, InstallationDto.CompleteRequest request, String workerEmail) {
-        User user = userRepository.findByEmail(workerEmail)
+        User user = userRepository.findByEmail(workerEmail).or(() -> userRepository.findByUsername(workerEmail))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + workerEmail));
 
         Installation installation = installationRepository.findById(installationId)

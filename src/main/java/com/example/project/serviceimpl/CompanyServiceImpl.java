@@ -34,9 +34,10 @@ public class CompanyServiceImpl implements CompanyService {
         this.userRepository = userRepository;
     }
 
-    private User getUser(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+    private User getUser(String identifier) {
+        return userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByUsername(identifier))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + identifier));
     }
 
     private void validateOwnershipOrAdmin(Company company, User user) {
